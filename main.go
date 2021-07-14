@@ -19,18 +19,17 @@ var (
 )
 
 func init() {
-	if databaseUsername = os.Getenv("DB_User"); len(databaseUsername) == 0 {
-		log.Panic("environment variable 'DB_User' needs to be set")
+	databaseUsername = parseEnvironmentVariable("DB_User")
+	databasePassword = parseEnvironmentVariable("DB_Pass")
+	clcUsername = parseEnvironmentVariable("CLC_Username")
+	clcPassword = parseEnvironmentVariable("CLC_Password")
+}
+
+func parseEnvironmentVariable(key string) (val string) {
+	if val = os.Getenv(key); len(val) == 0 {
+		log.Panicf("environment variable '%s' needs to be set", key)
 	}
-	if databasePassword = os.Getenv("DB_Pass"); len(databasePassword) == 0 {
-		log.Panic("environment variable 'DB_Pass' needs to be set")
-	}
-	if clcUsername = os.Getenv("CLC_Username"); len(clcUsername) == 0 {
-		log.Panic("environment variable 'CLC_Username' needs to be set")
-	}
-	if clcPassword = os.Getenv("CLC_Password"); len(clcPassword) == 0 {
-		log.Panic("environment variable 'CLC_Password' needs to be set")
-	}
+	return
 }
 
 func main() {
@@ -52,8 +51,8 @@ func main() {
 	}
 
 	api, err := clc.NewAPI(clc.Config{
-		CLCUsername:    os.Getenv("CLC_Username"),
-		CLCPassword:    os.Getenv("CLC_Password"),
+		CLCUsername:    clcUsername,
+		CLCPassword:    clcPassword,
 		RDBSAppfogUser: serviceAccount.Username,
 		RDBSAppfogPass: serviceAccount.Password,
 	})
